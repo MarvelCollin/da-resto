@@ -16,14 +16,13 @@ public class Restaurant {
     private ArrayList<Waiter> waiters;
     private ArrayList<Customer> customers;
     
-    Restaurant(String name) {
+    public Restaurant(String name) {
         this.name = name;
         this.chefs = new ArrayList<>();
         this.waiters = new ArrayList<>();
         this.customers = new ArrayList<>();
     }
 
-    
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     
