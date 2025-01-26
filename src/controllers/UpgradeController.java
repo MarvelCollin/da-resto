@@ -1,7 +1,7 @@
 package controllers;
 
 import controllers.Facades.GameFacade;
-import controllers.Managers.HighscoreManager;  // Add this import
+import controllers.Managers.HighscoreManager;  
 import models.Restaurant;
 import models.Entity.*;
 import utils.Validator;
@@ -12,12 +12,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class UpgradeController {
     private final GameFacade gameFacade;
     private final UpgradeMenuView upgradeMenuView;
-    private final HighscoreManager highscoreManager;  // Add this field
+    private final HighscoreManager highscoreManager;  
     
     public UpgradeController(Restaurant restaurant) {
         this.gameFacade = GameFacade.getInstance();
         this.upgradeMenuView = new UpgradeMenuView();
-        this.highscoreManager = HighscoreManager.getInstance();  // Initialize it
+        this.highscoreManager = HighscoreManager.getInstance();  
     }
 
     private Restaurant getActiveRestaurant() {
@@ -87,7 +87,7 @@ public class UpgradeController {
             return;
         }
 
-        // Calculate cost based on next waiter (current size + 1)
+        
         int cost = 150 * (waiters.size() + 1);
         if (restaurant.getMoney() < cost) {
             upgradeMenuView.showInsufficientFundsError();
@@ -106,7 +106,7 @@ public class UpgradeController {
             return;
         }
 
-        // Calculate cost based on next chef (current size + 1)
+        
         int cost = 200 * (chefs.size() + 1);
         if (restaurant.getMoney() < cost) {
             upgradeMenuView.showInsufficientFundsError();

@@ -16,7 +16,7 @@ public class RestaurantFactory {
     }
     
     public Restaurant createRestaurant(String name) {
-        // Only create restaurant, don't add entities here
+        
         return new Restaurant(name);
     }
 }

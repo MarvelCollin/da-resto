@@ -38,7 +38,7 @@ public class UpgradeMenuView {
         Prettifier.cls();
         System.out.println("═════════════════════════════");
         System.out.println("HIRE MENU");
-        // Add 1 to current size for accurate next hire cost
+        
         System.out.println("1. Hire Waiter (Rp. " + (150 * (restaurant.getWaiters().size() + 1)) + ")");
         System.out.println("2. Hire Chef (Rp. " + (200 * (restaurant.getChefs().size() + 1)) + ")");
         System.out.println("3. Back");

@@ -38,10 +38,10 @@ public class Restaurant {
         this.chefs = new CopyOnWriteArrayList<>();
         this.waiters = new CopyOnWriteArrayList<>();
         this.customers = new CopyOnWriteArrayList<>();
-        // Don't set initial state here - wait for mediator
+        
     }
 
-    // Add method to initialize state after mediator is set
+    
     public void initialize() {
         if (this.state == null) {
             this.state = new RestaurantRunning();
