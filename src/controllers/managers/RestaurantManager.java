@@ -1,4 +1,4 @@
-package controllers.managers;
+package controllers.Managers;
 
 import models.Restaurant;
 import models.Entity.*;

@@ -1,4 +1,4 @@
-package controllers.managers;
+package controllers.Managers;
 
 import java.io.*;
 import java.util.*;

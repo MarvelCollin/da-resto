@@ -6,9 +6,19 @@ import models.Factory.RestaurantFactory;
 import utils.StringUtils;
 
 public class Restaurant {
+    private static Restaurant activeRestaurant;
+    private int money = 1300;
+    private int score = 0;
+    private int seats = 4;
+    private RestaurantState state;
     
     public static Restaurant createRestaurant(String name) {
-        return RestaurantFactory.getInstance().createRestaurant(name);
+        activeRestaurant = RestaurantFactory.getInstance().createRestaurant(name);
+        return activeRestaurant;
+    }
+    
+    public static Restaurant getActiveRestaurant() {
+        return activeRestaurant;
     }
     
     private String name;
@@ -49,5 +59,18 @@ public class Restaurant {
     
     public String getCustomerInitials() {
         return StringUtils.joinInitials(customers, Customer::getInitial);
+    }
+    
+    public int getMoney() { return money; }
+    public void setMoney(int money) { this.money = money; }
+    
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score = score; }
+    
+    public int getSeats() { return seats; }
+    public void setSeats(int seats) { this.seats = seats; }
+    
+    public void setState(RestaurantState state) {
+        this.state = state;
     }
 }

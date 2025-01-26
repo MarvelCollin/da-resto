@@ -1,15 +1,16 @@
 package controllers;
 
-import models.Restaurant;
+import controllers.Facades.GameFacade;
 import utils.Validator;
 import views.GameView;
 
 public class GameController {
-    private Restaurant restaurant;
+    private GameFacade gameFacade;
     private GameView gameView;
     
     public GameController() {
-        gameView = new GameView();
+        this.gameFacade = GameFacade.getInstance();
+        this.gameView = new GameView();
         start();
     }
 
@@ -19,8 +20,8 @@ public class GameController {
             3, 15
         );
         
-        restaurant = Restaurant.createRestaurant(name);
-        gameView.displayGame(restaurant);
+        gameFacade.startNewGame(name);
+        gameView.displayGame(gameFacade.getRestaurant());
     }
 
     public void showNameInput() {

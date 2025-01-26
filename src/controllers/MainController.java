@@ -4,9 +4,10 @@ import utils.Validator;
 import utils.Switch;
 import views.MainMenuView;
 import views.HighscoreView;
-import controllers.managers.HighscoreManager;
 
 import java.util.ArrayList;
+
+import controllers.Managers.HighscoreManager;
 
 public class MainController {
     public final MainMenuView mainMenuView = new MainMenuView();
