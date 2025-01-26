@@ -3,9 +3,15 @@ package controllers.Mediators;
 import models.Restaurant;
 import models.Entity.*;
 import models.Factory.CustomerFactory;
+import models.States.ChefState.ChefIdle;
+import models.States.WaiterState.WaiterIdle;
+import interfaces.ICustomerObserver;
+
 import java.util.*;
 
-public class RestaurantMediator {
+import controllers.Observers.CustomerGenerator;
+
+public class RestaurantMediator implements ICustomerObserver {
     private Restaurant restaurant;
     private boolean isPaused;
     private Random random;
@@ -16,8 +22,17 @@ public class RestaurantMediator {
     
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+        CustomerGenerator.getInstance().setRestaurant(restaurant);
+        CustomerGenerator.getInstance().addObserver(this);
+        new Thread(CustomerGenerator.getInstance()).start();
     }
 
+    @Override
+    public void onCustomerGenerated() {
+        Customer customer = CustomerFactory.getInstance().createCustomer();
+        restaurant.addCustomer(customer);
+    }
+    
     public void updateEntities() {
         if (isPaused || restaurant == null) return;
         trySpawnCustomer();
@@ -28,6 +43,24 @@ public class RestaurantMediator {
             restaurant.getCustomers().size() < restaurant.getSeats()) {
             Customer customer = CustomerFactory.getInstance().createCustomer();
             restaurant.addCustomer(customer);
+        }
+    }
+
+    public void assignCustomerToWaiter(Customer customer) {
+        for (Waiter waiter : restaurant.getWaiters()) {
+            if (waiter.getState() instanceof WaiterIdle) {
+                waiter.handleOrder(customer);
+                return;
+            }
+        }
+    }
+
+    public void assignOrderToChef(Waiter waiter, Customer customer) {
+        for (Chef chef : restaurant.getChefs()) {
+            if (chef.getState() instanceof ChefIdle) {
+                chef.handleOrder(customer);
+                return;
+            }
         }
     }
 

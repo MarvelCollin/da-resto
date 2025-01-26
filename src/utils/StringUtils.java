@@ -76,23 +76,26 @@ public class StringUtils {
     private static ITableFormatter<Customer> createCustomerFormatter() {
         return new ITableFormatter<Customer>() {
             public String formatHeader() {
-                return "| Customer  ";
+                return "| Customer                    ";
             }
 
             public String formatRow(Customer c) {
-                return String.format("| %-8s  ", c.getInitial());
+                return String.format("| %-2s(%d), %-16s", 
+                    c.getInitial(), 
+                    c.getTolerance(),
+                    c.getState().getStateName());
             }
 
             public String formatEmpty() {
-                return "|          ";
+                return "|                          ";
             }
 
             public String formatBorder() {
-                return "+----------";
+                return "+-------------------------";
             }
 
             public int getColumnWidth() {
-                return 10;
+                return 25;
             }
         };
     }
@@ -100,23 +103,25 @@ public class StringUtils {
     private static ITableFormatter<Waiter> createWaiterFormatter() {
         return new ITableFormatter<Waiter>() {
             public String formatHeader() {
-                return "| Waiter    ";
+                return "| Waiter                     ";
             }
 
             public String formatRow(Waiter w) {
-                return String.format("| %-8s  ", w.getInitial());
+                return String.format("| %-2s, %-19s", 
+                    w.getInitial(),
+                    w.getState().getStateName());
             }
 
             public String formatEmpty() {
-                return "|          ";
+                return "|                          ";
             }
 
             public String formatBorder() {
-                return "+----------";
+                return "+-------------------------";
             }
 
             public int getColumnWidth() {
-                return 10;
+                return 25;
             }
         };
     }
@@ -124,23 +129,25 @@ public class StringUtils {
     private static ITableFormatter<Chef> createChefFormatter() {
         return new ITableFormatter<Chef>() {
             public String formatHeader() {
-                return "| Chef      ";
+                return "| Chef                       ";
             }
 
             public String formatRow(Chef c) {
-                return String.format("| %-8s  ", c.getInitial());
+                return String.format("| %-2s, %-19s", 
+                    c.getInitial(),
+                    c.getState().getStateName());
             }
 
             public String formatEmpty() {
-                return "|          ";
+                return "|                          ";
             }
 
             public String formatBorder() {
-                return "+----------";
+                return "+-------------------------";
             }
 
             public int getColumnWidth() {
-                return 10;
+                return 25;
             }
         };
     }

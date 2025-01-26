@@ -1,6 +1,8 @@
 package views;
 
 import models.Restaurant;
+import models.Entity.*;
+import utils.Prettifier;
 import utils.StringUtils;
 
 public class GameView {
@@ -11,16 +13,26 @@ public class GameView {
     public void start() {
     }
 
-    public void displayGame(Restaurant restaurant){ 
-        System.out.println("=====================");
-        System.out.printf("    %s%n", restaurant.getName());
-        System.out.println("=====================");
-        
+    public void displayGame(Restaurant restaurant) {
+        Prettifier.cls();
+        displayRestaurantInfo(restaurant);
+        displayEntities(restaurant);
+    }
+
+    private void displayRestaurantInfo(Restaurant restaurant) {
+        System.out.println("Restaurant: " + restaurant.getName());
+        System.out.println("Money: Rp. " + restaurant.getMoney());
+        System.out.println("Score: " + restaurant.getScore());
+        System.out.println("Seats: " + restaurant.getSeats());
+        System.out.println();
+    }
+
+    private void displayEntities(Restaurant restaurant) {
         System.out.println(StringUtils.createTable(
             restaurant.getCustomers(),
             restaurant.getWaiters(),
             restaurant.getChefs()
-        ));
+         ));
     }
 
     public void displayStatus() {
