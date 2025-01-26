@@ -15,11 +15,17 @@ public class ChefIdle extends BaseState {
 
     @Override
     public String getStateName() {
-        return String.format("%s - idle", entity.getInitial());
+        return "idle";
     }
 
     @Override
     public void changeState(String customerName) {
-        entity.setState(new ChefCook((Chef)entity, customerName));
+        Chef chef = (Chef)entity;
+        if (chef.getCurrentCustomer() == null) {  // Only take order if not already cooking
+            System.out.println("Chef " + chef.getInitial() + " starting to cook for " + customerName);
+            chef.setState(new ChefCook((Chef)entity, customerName));
+        } else {
+            System.out.println("Chef " + chef.getInitial() + " is already cooking for " + chef.getCurrentCustomer().getInitial());
+        }
     }
 }

@@ -20,11 +20,12 @@ public class GameView {
     }
 
     private void displayRestaurantInfo(Restaurant restaurant) {
+        System.out.println("═════════════════════════════");
         System.out.println("Restaurant: " + restaurant.getName());
         System.out.println("Money: Rp. " + restaurant.getMoney());
         System.out.println("Score: " + restaurant.getScore());
         System.out.println("Seats: " + restaurant.getSeats());
-        System.out.println();
+        System.out.println("═════════════════════════════\n");
     }
 
     private void displayEntities(Restaurant restaurant) {
@@ -32,7 +33,7 @@ public class GameView {
             restaurant.getCustomers(),
             restaurant.getWaiters(),
             restaurant.getChefs()
-         ));
+        ));
     }
 
     public void displayStatus() {

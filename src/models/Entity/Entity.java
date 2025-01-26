@@ -45,6 +45,10 @@ public abstract class Entity implements IRestaurant {
         this.mediator = mediator;
     }
 
+    public RestaurantMediator getMediator() {
+        return mediator;
+    }
+
     @Override
     public void pause() {
         this.isPaused = true;
@@ -58,13 +62,14 @@ public abstract class Entity implements IRestaurant {
     @Override
     public void stop() {
         this.isPaused = true;
-        // Additional cleanup if needed
     }
 
     @Override
     public void update() {
         if (!isPaused && state != null) {
             state.update();
+            // Debug state changes
+            System.out.println(getInitial() + " state: " + state.getStateName());
         }
     }
 }

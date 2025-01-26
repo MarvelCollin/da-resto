@@ -1,33 +1,32 @@
 package models.States.WaiterState;
 
 import models.Entity.Waiter;
+import models.Entity.Chef;
 import models.States.BaseState;
 
 public class WaiterBringOrder extends BaseState {
     private int bringTime = 1;
-    private boolean toIdleChef;
 
-    public WaiterBringOrder(Waiter waiter, String chefName) {
-        super(waiter, chefName);
+    public WaiterBringOrder(Waiter waiter, String customerName) {
+        super(waiter, customerName);
+        // Tell chef we picked up the food
+        Chef chef = waiter.getAssignedChef();
+        if (chef != null) {
+            System.out.println("Waiter " + waiter.getInitial() + " picking up food from chef " + chef.getInitial());
+            chef.getState().changeState(null); // This will make chef go idle
+        }
     }
 
     @Override
     public void update() {
         if (--bringTime <= 0) {
-            if (toIdleChef) {
-                entity.setState(new WaiterIdle((Waiter)entity));
-            } else {
-                entity.setState(new WaiterServingFood((Waiter)entity, customerName));
-            }
+            System.out.println("Waiter " + entity.getInitial() + " delivering food to " + customerName);
+            entity.setState(new WaiterServingFood((Waiter)entity, customerName));
         }
     }
 
     @Override
     public String getStateName() {
-        return String.format("%s - bring order (%s)", entity.getInitial(), customerName);
-    }
-
-    public void setToIdleChef(boolean toIdleChef) {
-        this.toIdleChef = toIdleChef;
+        return String.format("bring_order(%s)", customerName);
     }
 }

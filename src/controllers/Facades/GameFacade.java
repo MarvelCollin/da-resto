@@ -2,11 +2,10 @@ package controllers.Facades;
 
 import controllers.Mediators.RestaurantMediator;
 import models.Restaurant;
-import models.Entity.Chef;
-import models.Entity.Waiter;
+import models.Entity.*;
 import models.Factory.ChefFactory;
-import models.Factory.RestaurantFactory;
 import models.Factory.WaiterFactory;
+import utils.Constants;
 
 public class GameFacade {
     private static volatile GameFacade instance;
@@ -19,21 +18,15 @@ public class GameFacade {
     
     public static GameFacade getInstance() {
         if (instance == null) {
-            synchronized (GameFacade.class) {
-                if (instance == null) {
-                    instance = new GameFacade();
-                }
-            }
+            instance = new GameFacade();
         }
         return instance;
     }
     
     public void startNewGame(String name) {
-        if (restaurant != null) {
-            shutdownGame();
-        }
-        restaurant = RestaurantFactory.getInstance().createRestaurant(name);
+        restaurant = Restaurant.createRestaurant(name);
         mediator.setRestaurant(restaurant);
+        initializeGame();
     }
     
     public void pauseGame() {
@@ -44,35 +37,44 @@ public class GameFacade {
         mediator.resumeAllOperations();
     }
     
-    public void updateGame() {
-        restaurant.update();
-        mediator.updateEntities();
+    public boolean isPaused() {
+        return mediator.isPaused();
     }
     
-    public boolean isPaused() {
-        return restaurant == null || 
-               restaurant.getState() == null || 
-               restaurant.getState().getStateName().equals("Paused");
+    public void updateGame() {
+        if (restaurant != null) {
+            restaurant.update();
+            mediator.updateEntities();
+        }
     }
     
     public Restaurant getRestaurant() {
         return restaurant;
     }
     
+    private void initializeGame() {
+        // Initialize with exactly 2 waiters and 2 chefs
+        for (int i = 0; i < Constants.DEFAULT_WAITERS; i++) {
+            Waiter waiter = WaiterFactory.getInstance().createWaiter();
+            Chef chef = ChefFactory.getInstance().createChef();
+            
+            waiter.setMediator(mediator);
+            chef.setMediator(mediator);
+            
+            restaurant.addWaiter(waiter);
+            restaurant.addChef(chef);
+        }
+    }
+    
     public void hireWaiter() {
         Waiter waiter = WaiterFactory.getInstance().createWaiter();
+        waiter.setMediator(mediator);
         restaurant.addWaiter(waiter);
     }
     
     public void hireChef() {
         Chef chef = ChefFactory.getInstance().createChef();
+        chef.setMediator(mediator);
         restaurant.addChef(chef);
     }
-    
-    public void shutdownGame() {
-        if (mediator != null) {
-            mediator.shutdown();
-        }
-    }
-    
 }

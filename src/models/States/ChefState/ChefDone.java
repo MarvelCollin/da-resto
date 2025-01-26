@@ -6,6 +6,7 @@ import models.States.BaseState;
 public class ChefDone extends BaseState {
     public ChefDone(Chef chef, String customerName) {
         super(chef, customerName);
+        System.out.println("Chef " + chef.getInitial() + " finished cooking for " + customerName);
     }
 
     @Override
@@ -15,11 +16,13 @@ public class ChefDone extends BaseState {
 
     @Override
     public String getStateName() {
-        return String.format("%s - done (%s)", entity.getInitial(), customerName);
+        return String.format("done(%s)", customerName);
     }
 
+    // This will be called by waiter after picking up food
     @Override
     public void changeState(String customerName) {
+        ((Chef)entity).finishOrder();
         entity.setState(new ChefIdle((Chef)entity));
     }
 }

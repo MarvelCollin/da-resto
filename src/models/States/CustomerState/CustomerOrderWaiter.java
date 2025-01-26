@@ -10,7 +10,6 @@ public class CustomerOrderWaiter extends BaseState {
 
     @Override
     public void update() {
-        // No tolerance reduction while being served
     }
 
     @Override

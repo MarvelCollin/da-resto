@@ -33,7 +33,7 @@ public class GameController {
                     gameView.displayGame(gameFacade.getRestaurant());
                 }
                 try {
-                    Thread.sleep(1000); // Update every second
+                    Thread.sleep(1000); 
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -51,7 +51,7 @@ public class GameController {
     }
 
     private void showPauseMenu() {
-        // TODO: Implement pause menu
+        
         gameFacade.resumeGame();
     }
 

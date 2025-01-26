@@ -10,12 +10,11 @@ public class WaiterIdle extends BaseState {
 
     @Override
     public void update() {
-        // Do nothing in idle state
     }
 
     @Override
     public String getStateName() {
-        return String.format("%s - idle", entity.getInitial());
+        return String.format("idle", entity.getInitial());
     }
 
     @Override

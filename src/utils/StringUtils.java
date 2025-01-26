@@ -7,6 +7,7 @@ import interfaces.ITableFormatter;
 
 public class StringUtils {
     private static final int PADDING = 2;
+    private static final int MIN_WIDTH = 35; 
 
     public static <T> String joinInitials(List<T> items, Function<T, String> getInitial) {
         StringBuilder result = new StringBuilder();
@@ -76,26 +77,29 @@ public class StringUtils {
     private static ITableFormatter<Customer> createCustomerFormatter() {
         return new ITableFormatter<Customer>() {
             public String formatHeader() {
-                return "| Customer                    ";
+                return String.format("| %-" + MIN_WIDTH + "s", "Customer");
             }
 
             public String formatRow(Customer c) {
-                return String.format("| %-2s(%d), %-16s", 
-                    c.getInitial(), 
-                    c.getTolerance(),
-                    c.getState().getStateName());
+                String stateInfo = c.getState() != null ? 
+                    formatStateSimple(c.getState().getStateName()) : "waiting";
+                return String.format("| %-" + MIN_WIDTH + "s", 
+                    String.format("%s(%d) ~> %s", 
+                        c.getInitial(), 
+                        c.getTolerance(),
+                        stateInfo));
             }
 
             public String formatEmpty() {
-                return "|                          ";
+                return String.format("| %-" + MIN_WIDTH + "s", "");
             }
 
             public String formatBorder() {
-                return "+-------------------------";
+                return "+" + "-".repeat(MIN_WIDTH + 2);
             }
 
             public int getColumnWidth() {
-                return 25;
+                return MIN_WIDTH + 2;
             }
         };
     }
@@ -103,25 +107,28 @@ public class StringUtils {
     private static ITableFormatter<Waiter> createWaiterFormatter() {
         return new ITableFormatter<Waiter>() {
             public String formatHeader() {
-                return "| Waiter                     ";
+                return String.format("| %-" + MIN_WIDTH + "s", "Waiter");
             }
 
             public String formatRow(Waiter w) {
-                return String.format("| %-2s, %-19s", 
-                    w.getInitial(),
-                    w.getState().getStateName());
+                String stateInfo = w.getState() != null ? 
+                    formatStateSimple(w.getState().getStateName()) : "waiting";
+                return String.format("| %-" + MIN_WIDTH + "s", 
+                    String.format("%s ~> %s", 
+                        w.getInitial(),
+                        stateInfo));
             }
 
             public String formatEmpty() {
-                return "|                          ";
+                return String.format("| %-" + MIN_WIDTH + "s", "");
             }
 
             public String formatBorder() {
-                return "+-------------------------";
+                return "+" + "-".repeat(MIN_WIDTH + 2);
             }
 
             public int getColumnWidth() {
-                return 25;
+                return MIN_WIDTH + 2;
             }
         };
     }
@@ -129,26 +136,40 @@ public class StringUtils {
     private static ITableFormatter<Chef> createChefFormatter() {
         return new ITableFormatter<Chef>() {
             public String formatHeader() {
-                return "| Chef                       ";
+                return String.format("| %-" + MIN_WIDTH + "s", "Chef");
             }
 
             public String formatRow(Chef c) {
-                return String.format("| %-2s, %-19s", 
-                    c.getInitial(),
-                    c.getState().getStateName());
+                String stateInfo = c.getState() != null ? 
+                    formatStateSimple(c.getState().getStateName()) : "waiting";
+                return String.format("| %-" + MIN_WIDTH + "s", 
+                    String.format("%s ~> %s", 
+                        c.getInitial(),
+                        stateInfo));
             }
 
             public String formatEmpty() {
-                return "|                          ";
+                return String.format("| %-" + MIN_WIDTH + "s", "");
             }
 
             public String formatBorder() {
-                return "+-------------------------";
+                return "+" + "-".repeat(MIN_WIDTH + 2);
             }
 
             public int getColumnWidth() {
-                return 25;
+                return MIN_WIDTH + 2;
             }
         };
+    }
+
+    private static String formatStateSimple(String stateName) {
+        if (stateName == null) return "waiting";
+        int bracketIndex = stateName.indexOf('(');
+        if (bracketIndex != -1) {
+            String state = stateName.substring(0, bracketIndex).trim();
+            String target = stateName.substring(bracketIndex + 1, stateName.length() - 1);
+            return String.format("%s %s", state, target);
+        }
+        return stateName;
     }
 }

@@ -7,6 +7,7 @@ import models.States.RestaurantState.RestaurantRunning;
 import utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Restaurant {
     private static Restaurant activeRestaurant;
@@ -25,15 +26,15 @@ public class Restaurant {
     }
     
     private String name;
-    private ArrayList<Chef> chefs;
-    private ArrayList<Waiter> waiters;
-    private ArrayList<Customer> customers;
+    private CopyOnWriteArrayList<Chef> chefs;
+    private CopyOnWriteArrayList<Waiter> waiters;
+    private CopyOnWriteArrayList<Customer> customers;
     
     public Restaurant(String name) {
         this.name = name;
-        this.chefs = new ArrayList<>();
-        this.waiters = new ArrayList<>();
-        this.customers = new ArrayList<>();
+        this.chefs = new CopyOnWriteArrayList<>();
+        this.waiters = new CopyOnWriteArrayList<>();
+        this.customers = new CopyOnWriteArrayList<>();
         this.state = new RestaurantRunning();
         this.state.onEnter(this);
     }
@@ -41,9 +42,9 @@ public class Restaurant {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     
-    public ArrayList<Chef> getChefs() { return chefs; }
-    public ArrayList<Waiter> getWaiters() { return waiters; }
-    public ArrayList<Customer> getCustomers() { return customers; }
+    public CopyOnWriteArrayList<Chef> getChefs() { return chefs; }
+    public CopyOnWriteArrayList<Waiter> getWaiters() { return waiters; }
+    public CopyOnWriteArrayList<Customer> getCustomers() { return customers; }
     
     public void addChef(Chef chef) { chefs.add(chef); }
     public void addWaiter(Waiter waiter) { waiters.add(waiter); }

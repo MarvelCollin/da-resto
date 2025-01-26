@@ -12,7 +12,7 @@ public class CustomerWaitFood extends BaseState {
 
     @Override
     public void update() {
-        if (++toleranceTimer >= 4) {  // Every 4 seconds
+        if (++toleranceTimer >= 4) {  
             ((Customer)entity).reduceTolerance();
             toleranceTimer = 0;
         }
