@@ -29,6 +29,9 @@ public class GameFacade {
     }
     
     public void startNewGame(String name) {
+        if (restaurant != null) {
+            shutdownGame();
+        }
         restaurant = RestaurantFactory.getInstance().createRestaurant(name);
         mediator.setRestaurant(restaurant);
     }
@@ -39,6 +42,17 @@ public class GameFacade {
     
     public void resumeGame() {
         mediator.resumeAllOperations();
+    }
+    
+    public void updateGame() {
+        restaurant.update();
+        mediator.updateEntities();
+    }
+    
+    public boolean isPaused() {
+        return restaurant == null || 
+               restaurant.getState() == null || 
+               restaurant.getState().getStateName().equals("Paused");
     }
     
     public Restaurant getRestaurant() {
@@ -53,6 +67,12 @@ public class GameFacade {
     public void hireChef() {
         Chef chef = ChefFactory.getInstance().createChef();
         restaurant.addChef(chef);
+    }
+    
+    public void shutdownGame() {
+        if (mediator != null) {
+            mediator.shutdown();
+        }
     }
     
 }

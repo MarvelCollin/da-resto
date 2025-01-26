@@ -75,6 +75,10 @@ public class Restaurant {
     public int getSeats() { return seats; }
     public void setSeats(int seats) { this.seats = seats; }
     
+    public IRestaurantState getState() {
+        return state;
+    }
+    
     public void setState(IRestaurantState newState) {
         if (this.state != null) {
             this.state.onExit(this);

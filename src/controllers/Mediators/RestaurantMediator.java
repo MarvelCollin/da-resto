@@ -2,62 +2,70 @@ package controllers.Mediators;
 
 import models.Restaurant;
 import models.Entity.*;
+import models.Factory.CustomerFactory;
+import java.util.*;
 
 public class RestaurantMediator {
     private Restaurant restaurant;
-    private boolean isPaused = false;
+    private boolean isPaused;
+    private Random random;
+    
+    public RestaurantMediator() {
+        this.random = new Random();
+    }
     
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
+
+    public void updateEntities() {
+        if (isPaused || restaurant == null) return;
+        trySpawnCustomer();
+    }
     
+    private void trySpawnCustomer() {
+        if (random.nextInt(100) < 25 && 
+            restaurant.getCustomers().size() < restaurant.getSeats()) {
+            Customer customer = CustomerFactory.getInstance().createCustomer();
+            restaurant.addCustomer(customer);
+        }
+    }
+
     public void pauseAllOperations() {
         isPaused = true;
-        // Notify all entities to pause
+        for (Chef chef : restaurant.getChefs()) {
+            chef.pause();
+        }
+        for (Waiter waiter : restaurant.getWaiters()) {
+            waiter.pause();
+        }
+        for (Customer customer : restaurant.getCustomers()) {
+            customer.pause();
+        }
     }
-    
+
     public void resumeAllOperations() {
         isPaused = false;
-        // Notify all entities to resume
-    }
-    
-    public void customerNeedsOrder(Customer customer) {
-        for (Waiter waiter : restaurant.getWaiters()) {
-            if (waiter.isIdle()) {
-                waiter.takeOrder(customer);
-                return;
-            }
-        }
-    }
-    
-    public void waiterNeedsChef(Waiter waiter, Customer customer) {
         for (Chef chef : restaurant.getChefs()) {
-            if (chef.isIdle()) {
-                chef.cookOrder(customer);
-                waiter.setWaitingForChef(chef);
-                return;
-            }
+            chef.resume();
         }
-    }
-    
-    public void chefFinishedCooking(Chef chef, Customer customer) {
         for (Waiter waiter : restaurant.getWaiters()) {
-            if (waiter.isWaitingForChef(chef)) {
-                waiter.serveOrder(customer);
-                return;
-            }
+            waiter.resume();
+        }
+        for (Customer customer : restaurant.getCustomers()) {
+            customer.resume();
         }
     }
-    
-    public void customerLeft(Customer customer) {
-        restaurant.removeCustomer(customer);
-    }
-    
-    public void hireWaiter() {
-        // Logic to create and add new waiter
-    }
-    
-    public void hireChef() {
-        // Logic to create and add new chef
+
+    public void shutdown() {
+        for (Chef chef : restaurant.getChefs()) {
+            chef.stop();
+        }
+        for (Waiter waiter : restaurant.getWaiters()) {
+            waiter.stop();
+        }
+        for (Customer customer : restaurant.getCustomers()) {
+            customer.stop();
+        }
     }
 }

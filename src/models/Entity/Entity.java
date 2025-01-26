@@ -1,12 +1,15 @@
 package models.Entity;
 
 import interfaces.IState;
+import interfaces.IRestaurant;
+import controllers.Mediators.RestaurantMediator;
 
-
-public abstract class Entity {
+public abstract class Entity implements IRestaurant {
     private String initial;
     private String outputString;
     protected IState state;  
+    private volatile boolean isPaused = false;
+    private RestaurantMediator mediator;
 
     public Entity(String initial) {
         this.initial = initial;
@@ -37,8 +40,30 @@ public abstract class Entity {
         return state;
     }
 
+    @Override
+    public void setMediator(RestaurantMediator mediator) {
+        this.mediator = mediator;
+    }
+
+    @Override
+    public void pause() {
+        this.isPaused = true;
+    }
+
+    @Override
+    public void resume() {
+        this.isPaused = false;
+    }
+
+    @Override
+    public void stop() {
+        this.isPaused = true;
+        // Additional cleanup if needed
+    }
+
+    @Override
     public void update() {
-        if(state != null) {
+        if (!isPaused && state != null) {
             state.update();
         }
     }
