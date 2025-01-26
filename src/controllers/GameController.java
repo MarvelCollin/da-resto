@@ -1,17 +1,25 @@
 package controllers;
 
 import controllers.Facades.GameFacade;
+import controllers.Managers.HighscoreManager;
 import utils.Validator;
 import views.GameView;
+import utils.Switch;
+import views.PauseMenuView;
 import java.util.Scanner;
+import interfaces.IMenuAction;
 
 public class GameController {
     private final GameFacade gameFacade;
     private final GameView gameView;
+    private final PauseMenuView pauseMenuView;
+    private final UpgradeController upgradeController;
     
     public GameController() {
         gameFacade = GameFacade.getInstance();
         gameView = new GameView();
+        pauseMenuView = new PauseMenuView();
+        upgradeController = new UpgradeController();
     }
 
     public void start() {
@@ -31,6 +39,7 @@ public class GameController {
                 if (!gameFacade.isPaused()) {
                     gameFacade.updateGame();
                     gameView.displayGame(gameFacade.getRestaurant());
+                    System.out.println("\nPress 'Enter' to pause the game");
                 }
                 try {
                     Thread.sleep(1000); 
@@ -51,8 +60,45 @@ public class GameController {
     }
 
     private void showPauseMenu() {
-        
-        gameFacade.resumeGame();
+        while (true) {
+            pauseMenuView.showPauseMenu(gameFacade.getRestaurant());
+            
+            int choice = Validator.getValidIntInput(
+                () -> System.out.print("Choose menu [1-3]: "),
+                1, 3
+            );
+
+            boolean shouldBreak = Switch.execute(choice,
+                new IMenuAction() {
+                    public boolean execute() {
+                        gameFacade.resumeGame();
+                        return true;
+                    }
+                },
+                new IMenuAction() {
+                    public boolean execute() {
+                        upgradeController.start();
+                        return false;
+                    }
+                },
+                new IMenuAction() {
+                    public boolean execute() {
+                        closeRestaurant();
+                        return true;
+                    }
+                }
+            );
+            
+            if (shouldBreak) break;
+        }
+    }
+
+    private void closeRestaurant() {
+        HighscoreManager.getInstance().addScore(
+            gameFacade.getRestaurant().getName(),
+            gameFacade.getRestaurant().getScore()
+        );
+        System.exit(0);
     }
 
     public void showNameInput() {

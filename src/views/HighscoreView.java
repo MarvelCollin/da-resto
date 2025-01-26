@@ -1,17 +1,33 @@
 package views;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import controllers.Managers.HighscoreManager.RestaurantScore;
+import utils.Prettifier;
 
 public class HighscoreView {
-    public void showHighscores(ArrayList<Integer> scores) {
-        System.out.println("\n====== Highscores ======");
-        if(scores.isEmpty()) {
+    public void showHighscores(List<RestaurantScore> scores) {
+        Prettifier.cls();
+        System.out.println("═══════════════════════");
+        System.out.println("      HIGHSCORES");
+        System.out.println("═══════════════════════");
+        
+        if (scores.isEmpty()) {
             System.out.println("No highscores yet!");
         } else {
-            for(int i = 0; i < Math.min(scores.size(), 10); i++) {
-                System.out.printf("%d. %d\n", i+1, scores.get(i));
+            for (int i = 0; i < scores.size(); i++) {
+                RestaurantScore score = scores.get(i);
+                System.out.printf("%d. %s - %d\n", 
+                    i + 1, 
+                    score.getName(), 
+                    score.getScore()
+                );
             }
         }
-        System.out.println("=====================\n");
+        
+        System.out.println("═══════════════════════");
+        System.out.println("Press Enter to continue...");
+        new Scanner(System.in).nextLine();
     }
 }

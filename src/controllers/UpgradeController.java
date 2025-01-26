@@ -6,7 +6,7 @@ import models.Entity.*;
 import utils.Validator;
 import utils.Switch;
 import views.UpgradeMenuView;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UpgradeController {
     private final GameFacade gameFacade;
@@ -74,7 +74,7 @@ public class UpgradeController {
     }
 
     private void hireWaiter() {
-        ArrayList<Waiter> waiters = restaurant.getWaiters();
+        CopyOnWriteArrayList<Waiter> waiters = restaurant.getWaiters();
         if (waiters.size() >= 7) {
             upgradeMenuView.showMaxEmployeesError();
             return;
@@ -91,7 +91,7 @@ public class UpgradeController {
     }
 
     private void hireChef() {
-        ArrayList<Chef> chefs = restaurant.getChefs();
+        CopyOnWriteArrayList<Chef> chefs = restaurant.getChefs();
         if (chefs.size() >= 7) {
             upgradeMenuView.showMaxEmployeesError();
             return;

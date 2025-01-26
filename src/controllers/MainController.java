@@ -5,9 +5,10 @@ import utils.Switch;
 import views.MainMenuView;
 import views.HighscoreView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import controllers.Managers.HighscoreManager;
+import controllers.Managers.HighscoreManager.RestaurantScore;
 
 public class MainController {
     public final MainMenuView mainMenuView = new MainMenuView();
@@ -36,7 +37,7 @@ public class MainController {
     }
     
     private void showHighscores() {
-        ArrayList<Integer> scores = HighscoreManager.getInstance().getHighscores();
+        List<RestaurantScore> scores = HighscoreManager.getInstance().getHighscores();
         highscoreView.showHighscores(scores);
     }
     

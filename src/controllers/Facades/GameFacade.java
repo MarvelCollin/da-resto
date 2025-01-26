@@ -53,7 +53,7 @@ public class GameFacade {
     }
     
     private void initializeGame() {
-        // Initialize with exactly 2 waiters and 2 chefs
+        
         for (int i = 0; i < Constants.DEFAULT_WAITERS; i++) {
             Waiter waiter = WaiterFactory.getInstance().createWaiter();
             Chef chef = ChefFactory.getInstance().createChef();
