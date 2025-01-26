@@ -3,5 +3,5 @@ package interfaces;
 public interface IState {
     void update();
     String getStateName();
-    void changeState(String customerName); // Add this method
+    void changeState(String customerName); 
 }

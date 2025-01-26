@@ -8,18 +8,18 @@ public class ChefCook extends BaseState {
 
     public ChefCook(Chef chef, String customerName) {
         super(chef, customerName);
-        this.cookingTime = 6 - chef.getSpeed();
+        this.cookingTime = 6 - ((Chef)entity).getSpeed();
     }
 
     @Override
     public void update() {
         if (--cookingTime <= 0) {
-            chef.setState(new ChefDone(chef, customerName));
+            entity.setState(new ChefDone((Chef)entity, customerName));
         }
     }
 
     @Override
     public String getStateName() {
-        return "cook (" + customerName + ")";
+        return String.format("%s - cook (%s)", entity.getInitial(), customerName);
     }
 }

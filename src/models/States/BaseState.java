@@ -1,19 +1,19 @@
 package models.States;
 
 import interfaces.IState;
-import models.Entity.Chef;
+import models.Entity.Entity;
 
 public abstract class BaseState implements IState {
-    protected Chef chef;
+    protected Entity entity;
     protected String customerName;
     
-    public BaseState(Chef chef, String customerName) {
-        this.chef = chef;
+    public BaseState(Entity entity, String customerName) {
+        this.entity = entity;
         this.customerName = customerName;
     }
     
-    public BaseState(Chef chef) {
-        this(chef, null);
+    public BaseState(Entity entity) {
+        this(entity, null);
     }
 
     @Override

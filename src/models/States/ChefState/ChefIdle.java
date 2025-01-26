@@ -10,16 +10,16 @@ public class ChefIdle extends BaseState {
 
     @Override
     public void update() {
-        // ni tunggu waiternya
+        // Wait for waiter to bring order
     }
 
     @Override
     public String getStateName() {
-        return "idle";
+        return String.format("%s - idle", entity.getInitial());
     }
 
     @Override
     public void changeState(String customerName) {
-        chef.setState(new ChefCook(chef, customerName));
+        entity.setState(new ChefCook((Chef)entity, customerName));
     }
 }
