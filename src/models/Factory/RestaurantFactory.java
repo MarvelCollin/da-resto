@@ -5,8 +5,8 @@ import models.Entity.Chef;
 import models.Entity.Waiter;
 import models.Entity.Entity;
 import utils.Constants;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import interfaces.ICreator;
+import interfaces.IHandler;
 
 public class RestaurantFactory {
     private static RestaurantFactory instance;
@@ -25,10 +25,10 @@ public class RestaurantFactory {
         return instance;
     }
     
-    private <T extends Entity> void createMultipleEntities(int count, Supplier<T> factory, Consumer<T> addMethod) {
+    private <T extends Entity> void createMultipleEntities(int count, ICreator<T> factory, IHandler<T> addMethod) {
         for(int i = 0; i < count; i++) {
-            T entity = factory.get();
-            addMethod.accept(entity);
+            T entity = factory.create();
+            addMethod.handle(entity);
         }
     }
     
