@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Restaurant;
 import utils.Validator;
 import utils.Switch;
 import views.MainMenuView;
@@ -13,8 +14,10 @@ import controllers.Managers.HighscoreManager.RestaurantScore;
 public class MainController {
     public final MainMenuView mainMenuView = new MainMenuView();
     private final HighscoreView highscoreView = new HighscoreView();
+    private Restaurant restaurant;
     
-    public MainController() {
+    public MainController(Restaurant restaurant) {
+        this.restaurant = restaurant;
         start();
     }
     
@@ -29,7 +32,7 @@ public class MainController {
             );
             
             Switch.execute(choice, 
-                () -> new GameController().start(),
+                () -> new GameController(restaurant).start(),
                 () -> showHighscores(),
                 () -> exitMenu()
             );

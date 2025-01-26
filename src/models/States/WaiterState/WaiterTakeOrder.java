@@ -2,6 +2,7 @@ package models.States.WaiterState;
 
 import models.Entity.Waiter;
 import models.States.BaseState;
+import utils.Debugger;
 
 public class WaiterTakeOrder extends BaseState {
     private int orderTime;
@@ -9,7 +10,7 @@ public class WaiterTakeOrder extends BaseState {
     public WaiterTakeOrder(Waiter waiter, String customerName) {
         super(waiter, customerName);
         this.orderTime = 6 - ((Waiter)entity).getSpeed();
-        System.out.println("Waiter " + waiter.getInitial() + " will take " + orderTime + " seconds to take order");
+        Debugger.waiterDebug("Waiter " + waiter.getInitial() + " will take " + orderTime + " seconds to take order");
     }
 
     @Override

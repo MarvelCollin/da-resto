@@ -4,13 +4,14 @@ import models.Entity.Waiter;
 import models.Entity.Customer;
 import models.States.BaseState;
 import models.States.CustomerState.CustomerEat;
+import utils.Debugger;
 
 public class WaiterServingFood extends BaseState {
     private int servingTime = 1;
 
     public WaiterServingFood(Waiter waiter, String customerName) {
         super(waiter, customerName);
-        System.out.println("Waiter " + waiter.getInitial() + " serving food to " + customerName);
+        Debugger.waiterDebug("Waiter " + waiter.getInitial() + " serving food to " + customerName);
     }
 
     @Override
@@ -19,9 +20,9 @@ public class WaiterServingFood extends BaseState {
             Waiter waiter = (Waiter)entity;
             Customer customer = waiter.getCurrentCustomer();
             if (customer != null) {
-                // Start customer eating
+                
                 customer.setState(new CustomerEat(customer, waiter.getAssignedChef().getSkill()));
-                // Clear waiter's assignments
+                
                 waiter.setCurrentCustomer(null);
                 waiter.setAssignedChef(null);
             }

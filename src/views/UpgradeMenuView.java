@@ -3,11 +3,23 @@ package views;
 import models.Restaurant;
 import models.Entity.*;
 import utils.Prettifier;
+import utils.Debugger;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UpgradeMenuView {
-    public void showUpgradeMenu(Restaurant restaurant) {
+    private Restaurant restaurant;
+
+    public UpgradeMenuView(Restaurant restaurant) {
+        this.restaurant = restaurant;
+        Debugger.restaurantInitializationDebug("Restaurant object initialized in UpgradeMenuView constructor.");
+    }
+
+    public void showUpgradeMenu() {
+        if (restaurant == null) {
+            Debugger.restaurantInitializationDebug("Restaurant object is null in showUpgradeMenu.");
+            throw new NullPointerException("Restaurant object is not initialized.");
+        }
         Prettifier.cls();
         System.out.println("═════════════════════════════");
         System.out.println("UPGRADE MENU");

@@ -2,10 +2,11 @@ package models.States.CustomerState;
 
 import models.Entity.Customer;
 import models.States.BaseState;
+import utils.Debugger;
 import models.Restaurant;
 
 public class CustomerEat extends BaseState {
-    private int eatTime = 6;  // Fixed 6 seconds
+    private int eatTime = 6;  
     private int chefSkill;
     private Restaurant restaurant;
 
@@ -18,16 +19,16 @@ public class CustomerEat extends BaseState {
     @Override
     public void update() {
         if (--eatTime <= 0) {
-            // Calculate reward based on chef's skill
+            
             int reward = chefSkill * 30;
             
-            // Add to restaurant score and money
+            
             restaurant.setScore(restaurant.getScore() + reward);
             restaurant.setMoney(restaurant.getMoney() + reward);
             
-            System.out.println("Customer " + entity.getInitial() + " finished eating!");
-            System.out.println("Earned money and score: " + reward + " (Chef skill: " + chefSkill + ")");
-            System.out.println("Restaurant total - Money: " + restaurant.getMoney() + ", Score: " + restaurant.getScore());
+            Debugger.customerDebug("Customer " + entity.getInitial() + " finished eating!");
+            Debugger.customerDebug("Earned money and score: " + reward + " (Chef skill: " + chefSkill + ")");
+            Debugger.customerDebug("Restaurant total - Money: " + restaurant.getMoney() + ", Score: " + restaurant.getScore());
             
             ((Customer)entity).getMediator().customerFinished((Customer)entity);
         }

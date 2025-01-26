@@ -4,13 +4,14 @@ import models.Entity.Waiter;
 import models.Entity.Chef;
 import models.States.BaseState;
 import models.States.ChefState.ChefDone;
+import utils.Debugger;
 
 public class WaiterWaitCook extends BaseState {
     private boolean orderAssigned = false;
 
     public WaiterWaitCook(Waiter waiter, String customerName) {
         super(waiter, customerName);
-        System.out.println("Waiter " + waiter.getInitial() + " looking for chef");
+        Debugger.waiterDebug("Waiter " + waiter.getInitial() + " looking for chef");
         tryAssignToChef(waiter);
     }
 
@@ -26,7 +27,7 @@ public class WaiterWaitCook extends BaseState {
         Chef assignedChef = waiter.getAssignedChef();
         
         if (assignedChef != null && assignedChef.getState() instanceof ChefDone) {
-            System.out.println("Waiter " + waiter.getInitial() + " found chef " + assignedChef.getInitial() + " is done cooking");
+            Debugger.waiterDebug("Waiter " + waiter.getInitial() + " found chef " + assignedChef.getInitial() + " is done cooking");
             entity.setState(new WaiterBringOrder(waiter, waiter.getCurrentCustomer().getInitial()));
         }
     }

@@ -8,18 +8,21 @@ import utils.Switch;
 import views.PauseMenuView;
 import java.util.Scanner;
 import interfaces.IMenuAction;
+import models.Restaurant;
 
 public class GameController {
     private final GameFacade gameFacade;
     private final GameView gameView;
     private final PauseMenuView pauseMenuView;
+    private final Restaurant restaurant;
     private final UpgradeController upgradeController;
     
-    public GameController() {
+    public GameController(Restaurant restaurant) {
+        this.restaurant = restaurant;
         gameFacade = GameFacade.getInstance();
         gameView = new GameView();
         pauseMenuView = new PauseMenuView();
-        upgradeController = new UpgradeController();
+        upgradeController = new UpgradeController(restaurant);
     }
 
     public void start() {

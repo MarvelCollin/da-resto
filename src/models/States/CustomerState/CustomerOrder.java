@@ -3,6 +3,7 @@ package models.States.CustomerState;
 import models.Entity.Customer;
 import models.States.BaseState;
 import controllers.Mediators.RestaurantMediator;
+import utils.Debugger;
 
 public class CustomerOrder extends BaseState {
     private int toleranceTimer = 0;
@@ -10,10 +11,10 @@ public class CustomerOrder extends BaseState {
     public CustomerOrder(Customer customer) {
         super(customer);
         if (customer.getMediator() != null) {
-            System.out.println("CustomerOrder: Requesting waiter for " + customer.getInitial()); // Debug
+            Debugger.customerDebug("CustomerOrder: Requesting waiter for " + customer.getInitial());
             customer.getMediator().assignCustomerToWaiter(customer);
         } else {
-            System.out.println("CustomerOrder: No mediator for " + customer.getInitial()); // Debug
+            Debugger.customerDebug("CustomerOrder: No mediator for " + customer.getInitial());
         }
     }
 
@@ -23,7 +24,7 @@ public class CustomerOrder extends BaseState {
             ((Customer)entity).reduceTolerance();
             toleranceTimer = 0;
             
-            // Retry getting a waiter periodically
+            
             if (entity.getMediator() != null) {
                 entity.getMediator().assignCustomerToWaiter((Customer)entity);
             }

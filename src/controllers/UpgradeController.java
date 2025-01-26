@@ -13,15 +13,15 @@ public class UpgradeController {
     private final UpgradeMenuView upgradeMenuView;
     private final Restaurant restaurant;
     
-    public UpgradeController() {
+    public UpgradeController(Restaurant restaurant) {
         this.gameFacade = GameFacade.getInstance();
-        this.upgradeMenuView = new UpgradeMenuView();
-        this.restaurant = gameFacade.getRestaurant();
+        this.upgradeMenuView = new UpgradeMenuView(restaurant);
+        this.restaurant = restaurant;
     }
 
     public void start() {
         while (true) {
-            upgradeMenuView.showUpgradeMenu(restaurant);
+            upgradeMenuView.showUpgradeMenu(); 
             
             int choice = Validator.getValidIntInput(
                 () -> System.out.print("Choose menu [1-5]: "),

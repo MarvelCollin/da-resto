@@ -2,6 +2,7 @@ package models.States.ChefState;
 
 import models.Entity.Chef;
 import models.States.BaseState;
+import utils.Debugger;
 
 public class ChefIdle extends BaseState {
     public ChefIdle(Chef chef) {
@@ -10,7 +11,7 @@ public class ChefIdle extends BaseState {
 
     @Override
     public void update() {
-        // Wait for waiter to bring order
+        
     }
 
     @Override
@@ -21,11 +22,11 @@ public class ChefIdle extends BaseState {
     @Override
     public void changeState(String customerName) {
         Chef chef = (Chef)entity;
-        if (chef.getCurrentCustomer() == null) {  // Only take order if not already cooking
-            System.out.println("Chef " + chef.getInitial() + " starting to cook for " + customerName);
+        if (chef.getCurrentCustomer() == null) {  
+            Debugger.chefDebug("Chef " + chef.getInitial() + " starting to cook for " + customerName);
             chef.setState(new ChefCook((Chef)entity, customerName));
         } else {
-            System.out.println("Chef " + chef.getInitial() + " is already cooking for " + chef.getCurrentCustomer().getInitial());
+            Debugger.chefDebug("Chef " + chef.getInitial() + " is already cooking for " + chef.getCurrentCustomer().getInitial());
         }
     }
 }
