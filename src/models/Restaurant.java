@@ -9,12 +9,15 @@ import utils.StringUtils;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import controllers.Mediators.RestaurantMediator;
+
 public class Restaurant {
     private static Restaurant activeRestaurant;
     private int money = 1300;
     private int score = 0;
     private int seats = 4;
     private IRestaurantState state;
+    private RestaurantMediator mediator;
     
     public static Restaurant createRestaurant(String name) {
         activeRestaurant = RestaurantFactory.getInstance().createRestaurant(name);
@@ -35,8 +38,15 @@ public class Restaurant {
         this.chefs = new CopyOnWriteArrayList<>();
         this.waiters = new CopyOnWriteArrayList<>();
         this.customers = new CopyOnWriteArrayList<>();
-        this.state = new RestaurantRunning();
-        this.state.onEnter(this);
+        // Don't set initial state here - wait for mediator
+    }
+
+    // Add method to initialize state after mediator is set
+    public void initialize() {
+        if (this.state == null) {
+            this.state = new RestaurantRunning();
+            this.state.onEnter(this);
+        }
     }
 
     public String getName() { return name; }
@@ -85,7 +95,17 @@ public class Restaurant {
             this.state.onExit(this);
         }
         this.state = newState;
-        this.state.onEnter(this);
+        if (this.state != null) {
+            this.state.onEnter(this);
+        }
+    }
+    
+    public RestaurantMediator getMediator() {
+        return mediator;
+    }
+    
+    public void setMediator(RestaurantMediator mediator) {
+        this.mediator = mediator;
     }
     
     public void update() {

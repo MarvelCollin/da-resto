@@ -6,7 +6,7 @@ import models.Factory.CustomerFactory;
 import models.States.ChefState.ChefIdle;
 import models.States.WaiterState.WaiterIdle;
 import interfaces.ICustomerObserver;
-import utils.Debugger;
+import utils.Debugger;  // Add this import
 
 import java.util.*;
 import java.util.HashSet;
@@ -28,6 +28,10 @@ public class RestaurantMediator implements ICustomerObserver {
     
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+        restaurant.setMediator(this);  
+        
+        
+        restaurant.initialize();
         
         
         for (Chef chef : restaurant.getChefs()) {
@@ -119,7 +123,7 @@ public class RestaurantMediator implements ICustomerObserver {
             Debugger.restaurantMediatorDebug("Customer already has a chef assigned");
             return;
         }
-
+        
         Debugger.restaurantMediatorDebug("Looking for available chef for customer " + customer.getInitial());
         for (Chef chef : restaurant.getChefs()) {
             if (chef.getState() instanceof ChefIdle && chef.getCurrentCustomer() == null) {

@@ -100,8 +100,10 @@ public class GameController {
     }
 
     private void closeRestaurant() {
-        int finalScore = restaurant.getScore();
-        String restaurantName = restaurant.getName();
+        
+        Restaurant activeRestaurant = Restaurant.getActiveRestaurant();
+        int finalScore = activeRestaurant.getScore();
+        String restaurantName = activeRestaurant.getName();
         
         HighscoreManager highscoreManager = HighscoreManager.getInstance();
         
@@ -122,7 +124,6 @@ public class GameController {
         
         
         highscoreView.showHighscores(highscoreManager.getHighscores());
-        
         
         System.out.println("\nPress Enter to continue...");
         new Scanner(System.in).nextLine();
