@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UpgradeMenuView {
-    private Restaurant restaurant;
-
-    public UpgradeMenuView(Restaurant restaurant) {
-        this.restaurant = restaurant;
-        Debugger.restaurantInitializationDebug("Restaurant object initialized in UpgradeMenuView constructor.");
+    
+    public UpgradeMenuView() {
+        Debugger.restaurantInitializationDebug("UpgradeMenuView initialized");
     }
 
-    public void showUpgradeMenu() {
+    public void showUpgradeMenu(Restaurant restaurant) {
         if (restaurant == null) {
             Debugger.restaurantInitializationDebug("Restaurant object is null in showUpgradeMenu.");
             throw new NullPointerException("Restaurant object is not initialized.");
@@ -40,8 +38,9 @@ public class UpgradeMenuView {
         Prettifier.cls();
         System.out.println("═════════════════════════════");
         System.out.println("HIRE MENU");
-        System.out.println("1. Hire Waiter (Rp. " + (150 * restaurant.getWaiters().size()) + ")");
-        System.out.println("2. Hire Chef (Rp. " + (200 * restaurant.getChefs().size()) + ")");
+        // Add 1 to current size for accurate next hire cost
+        System.out.println("1. Hire Waiter (Rp. " + (150 * (restaurant.getWaiters().size() + 1)) + ")");
+        System.out.println("2. Hire Chef (Rp. " + (200 * (restaurant.getChefs().size() + 1)) + ")");
         System.out.println("3. Back");
         System.out.println("═════════════════════════════");
     }
@@ -51,6 +50,12 @@ public class UpgradeMenuView {
         System.out.println("═════════════════════════════");
         System.out.println("WAITER LIST");
         System.out.println("═════════════════════════════");
+        
+        if (waiters.isEmpty()) {
+            System.out.println("No waiters available!");
+            return;
+        }
+        
         for (int i = 0; i < waiters.size(); i++) {
             Waiter w = waiters.get(i);
             System.out.printf("%d. %s (Speed: %d)\n", i + 1, w.getInitial(), w.getSpeed());
@@ -64,6 +69,12 @@ public class UpgradeMenuView {
         System.out.println("═════════════════════════════");
         System.out.println("CHEF LIST");
         System.out.println("═════════════════════════════");
+        
+        if (chefs.isEmpty()) {
+            System.out.println("No chefs available!");
+            return;
+        }
+        
         for (int i = 0; i < chefs.size(); i++) {
             Chef c = chefs.get(i);
             System.out.printf("%d. %s (Speed: %d, Skill: %d)\n", 

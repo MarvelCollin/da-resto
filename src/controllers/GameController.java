@@ -6,6 +6,7 @@ import utils.Validator;
 import views.GameView;
 import utils.Switch;
 import views.PauseMenuView;
+import views.HighscoreView;
 import java.util.Scanner;
 import interfaces.IMenuAction;
 import models.Restaurant;
@@ -14,6 +15,7 @@ public class GameController {
     private final GameFacade gameFacade;
     private final GameView gameView;
     private final PauseMenuView pauseMenuView;
+    private final HighscoreView highscoreView;
     private final Restaurant restaurant;
     private final UpgradeController upgradeController;
     
@@ -22,6 +24,7 @@ public class GameController {
         gameFacade = GameFacade.getInstance();
         gameView = new GameView();
         pauseMenuView = new PauseMenuView();
+        highscoreView = new HighscoreView();
         upgradeController = new UpgradeController(restaurant);
     }
 
@@ -97,10 +100,34 @@ public class GameController {
     }
 
     private void closeRestaurant() {
-        HighscoreManager.getInstance().addScore(
-            gameFacade.getRestaurant().getName(),
-            gameFacade.getRestaurant().getScore()
-        );
+        int finalScore = restaurant.getScore();
+        String restaurantName = restaurant.getName();
+        
+        HighscoreManager highscoreManager = HighscoreManager.getInstance();
+        
+        
+        highscoreManager.addScore(restaurantName, finalScore);
+        boolean isTopTen = highscoreManager.isInTopTen(finalScore);
+        
+        System.out.println("\n═════════════════════════════");
+        System.out.println("     RESTAURANT CLOSED");
+        System.out.println("═════════════════════════════");
+        System.out.println("Restaurant: " + restaurantName);
+        System.out.println("Final Score: " + finalScore);
+        System.out.println("═════════════════════════════");
+        
+        if (isTopTen) {
+            System.out.println("\n>>> Congratulations! You made it to the top 10! <<<\n");
+        }
+        
+        
+        highscoreView.showHighscores(highscoreManager.getHighscores());
+        
+        
+        System.out.println("\nPress Enter to continue...");
+        new Scanner(System.in).nextLine();
+        
+        gameFacade.shutdown();
         System.exit(0);
     }
 

@@ -1,6 +1,7 @@
 package controllers;
 
 import controllers.Facades.GameFacade;
+import controllers.Managers.HighscoreManager;  // Add this import
 import models.Restaurant;
 import models.Entity.*;
 import utils.Validator;
@@ -11,17 +12,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class UpgradeController {
     private final GameFacade gameFacade;
     private final UpgradeMenuView upgradeMenuView;
-    private final Restaurant restaurant;
+    private final HighscoreManager highscoreManager;  // Add this field
     
     public UpgradeController(Restaurant restaurant) {
         this.gameFacade = GameFacade.getInstance();
-        this.upgradeMenuView = new UpgradeMenuView(restaurant);
-        this.restaurant = restaurant;
+        this.upgradeMenuView = new UpgradeMenuView();
+        this.highscoreManager = HighscoreManager.getInstance();  // Initialize it
+    }
+
+    private Restaurant getActiveRestaurant() {
+        return Restaurant.getActiveRestaurant();
     }
 
     public void start() {
         while (true) {
-            upgradeMenuView.showUpgradeMenu(); 
+            upgradeMenuView.showUpgradeMenu(getActiveRestaurant()); 
             
             int choice = Validator.getValidIntInput(
                 () -> System.out.print("Choose menu [1-5]: "),
@@ -40,6 +45,7 @@ public class UpgradeController {
     }
 
     private void increaseSeats() {
+        Restaurant restaurant = getActiveRestaurant();
         if (restaurant.getSeats() >= 13) {
             upgradeMenuView.showMaxSeatsError();
             return;
@@ -57,7 +63,7 @@ public class UpgradeController {
 
     private void showHireMenu() {
         while (true) {
-            upgradeMenuView.showHireMenu(restaurant);
+            upgradeMenuView.showHireMenu(getActiveRestaurant());
             
             int choice = Validator.getValidIntInput(
                 () -> System.out.print("Choose employee type [1-3]: "),
@@ -74,13 +80,15 @@ public class UpgradeController {
     }
 
     private void hireWaiter() {
+        Restaurant restaurant = getActiveRestaurant();
         CopyOnWriteArrayList<Waiter> waiters = restaurant.getWaiters();
         if (waiters.size() >= 7) {
             upgradeMenuView.showMaxEmployeesError();
             return;
         }
 
-        int cost = 150 * waiters.size();
+        // Calculate cost based on next waiter (current size + 1)
+        int cost = 150 * (waiters.size() + 1);
         if (restaurant.getMoney() < cost) {
             upgradeMenuView.showInsufficientFundsError();
             return;
@@ -91,13 +99,15 @@ public class UpgradeController {
     }
 
     private void hireChef() {
+        Restaurant restaurant = getActiveRestaurant();
         CopyOnWriteArrayList<Chef> chefs = restaurant.getChefs();
         if (chefs.size() >= 7) {
             upgradeMenuView.showMaxEmployeesError();
             return;
         }
 
-        int cost = 200 * chefs.size();
+        // Calculate cost based on next chef (current size + 1)
+        int cost = 200 * (chefs.size() + 1);
         if (restaurant.getMoney() < cost) {
             upgradeMenuView.showInsufficientFundsError();
             return;
@@ -108,17 +118,25 @@ public class UpgradeController {
     }
 
     private void upgradeWaiter() {
+        Restaurant restaurant = getActiveRestaurant();
+        CopyOnWriteArrayList<Waiter> waiters = restaurant.getWaiters();
+        
+        if (waiters.isEmpty()) {
+            System.out.println("No waiters to upgrade!");
+            return;
+        }
+
         while (true) {
-            upgradeMenuView.showWaiterList(restaurant.getWaiters());
+            upgradeMenuView.showWaiterList(waiters);
             
             int choice = Validator.getValidIntInput(
-                () -> System.out.print("Choose waiter [0-" + restaurant.getWaiters().size() + "]: "),
-                0, restaurant.getWaiters().size()
+                () -> System.out.print("Choose waiter [0-" + waiters.size() + "]: "),
+                0, waiters.size()
             );
 
             if (choice == 0) return;
 
-            Waiter waiter = restaurant.getWaiters().get(choice - 1);
+            Waiter waiter = waiters.get(choice - 1);
             if (waiter.getSpeed() >= 5) {
                 upgradeMenuView.showMaxStatError();
                 continue;
@@ -136,17 +154,25 @@ public class UpgradeController {
     }
 
     private void upgradeCook() {
+        Restaurant restaurant = getActiveRestaurant();
+        CopyOnWriteArrayList<Chef> chefs = restaurant.getChefs();
+        
+        if (chefs.isEmpty()) {
+            System.out.println("No chefs to upgrade!");
+            return;
+        }
+
         while (true) {
-            upgradeMenuView.showChefList(restaurant.getChefs());
+            upgradeMenuView.showChefList(chefs);
             
             int choice = Validator.getValidIntInput(
-                () -> System.out.print("Choose chef [0-" + restaurant.getChefs().size() + "]: "),
-                0, restaurant.getChefs().size()
+                () -> System.out.print("Choose chef [0-" + chefs.size() + "]: "),
+                0, chefs.size()
             );
 
             if (choice == 0) return;
 
-            Chef chef = restaurant.getChefs().get(choice - 1);
+            Chef chef = chefs.get(choice - 1);
             upgradeMenuView.showChefUpgradeOptions();
             
             int statChoice = Validator.getValidIntInput(
@@ -159,16 +185,21 @@ public class UpgradeController {
                 continue;
             }
 
-            restaurant.setMoney(restaurant.getMoney() - 150);
+            boolean upgraded = false;
             if (statChoice == 1 && chef.getSpeed() < 5) {
                 chef.setSpeed(chef.getSpeed() + 1);
+                upgraded = true;
             } else if (statChoice == 2 && chef.getSkill() < 5) {
                 chef.setSkill(chef.getSkill() + 1);
+                upgraded = true;
+            }
+
+            if (upgraded) {
+                restaurant.setMoney(restaurant.getMoney() - 150);
+                return;
             } else {
                 upgradeMenuView.showMaxStatError();
-                continue;
             }
-            return;
         }
     }
 }

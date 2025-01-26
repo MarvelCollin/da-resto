@@ -16,6 +16,7 @@ public class Debugger {
     
     public static boolean mediatorDebug = false;
     public static boolean restaurantDebug = false;
+    public static boolean restaurantMediatorDebug = false;
 
     public static void chefDebug(String message) {
         if (chefStateDebug) {
@@ -68,6 +69,12 @@ public class Debugger {
     public static void restaurantInitializationDebug(String message) {
         if (restaurantDebug) {
             System.out.println("[Restaurant Initialization Debug] " + message);
+        }
+    }
+
+    public static void restaurantMediatorDebug(String message) {
+        if (restaurantMediatorDebug) {
+            System.out.println("[Restaurant Mediator Debug] " + message);
         }
     }
 

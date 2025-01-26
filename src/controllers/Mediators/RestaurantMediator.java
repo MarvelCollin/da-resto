@@ -6,6 +6,7 @@ import models.Factory.CustomerFactory;
 import models.States.ChefState.ChefIdle;
 import models.States.WaiterState.WaiterIdle;
 import interfaces.ICustomerObserver;
+import utils.Debugger;
 
 import java.util.*;
 import java.util.HashSet;
@@ -80,31 +81,31 @@ public class RestaurantMediator implements ICustomerObserver {
     }
 
     private void processNewCustomer(Customer customer) {
-        System.out.println("Processing new customer: " + customer.getInitial());
+        Debugger.restaurantMediatorDebug("Processing new customer: " + customer.getInitial());
         customer.startOrdering();
         assignCustomerToWaiter(customer);
     }
 
     public void assignCustomerToWaiter(Customer customer) {
         if (customersBeingServed.contains(customer)) {
-            System.out.println("Customer " + customer.getInitial() + " is already being served");
+            Debugger.restaurantMediatorDebug("Customer " + customer.getInitial() + " is already being served");
             return;
         }
 
-        System.out.println("Looking for available waiter for " + customer.getInitial());
+        Debugger.restaurantMediatorDebug("Looking for available waiter for " + customer.getInitial());
         for (Waiter waiter : restaurant.getWaiters()) {
             if (waiter.getState() instanceof WaiterIdle) {
-                System.out.println("Found idle waiter: " + waiter.getInitial());
+                Debugger.restaurantMediatorDebug("Found idle waiter: " + waiter.getInitial());
                 customersBeingServed.add(customer);
                 waiter.handleOrder(customer);
                 return;
             }
         }
-        System.out.println("No idle waiters found");
+        Debugger.restaurantMediatorDebug("No idle waiters found");
     }
 
     public void customerFinished(Customer customer) {
-        System.out.println("Customer " + customer.getInitial() + " finished and is leaving");
+        Debugger.restaurantMediatorDebug("Customer " + customer.getInitial() + " finished and is leaving");
         Chef assignedChef = customerChefAssignments.remove(customer);
         if (assignedChef != null) {
             assignedChef.finishOrder();
@@ -115,14 +116,14 @@ public class RestaurantMediator implements ICustomerObserver {
 
     public void assignOrderToChef(Waiter waiter, Customer customer) {
         if (customer == null || customerChefAssignments.containsKey(customer)) {
-            System.out.println("Customer already has a chef assigned");
+            Debugger.restaurantMediatorDebug("Customer already has a chef assigned");
             return;
         }
-        
-        System.out.println("Looking for available chef for customer " + customer.getInitial());
+
+        Debugger.restaurantMediatorDebug("Looking for available chef for customer " + customer.getInitial());
         for (Chef chef : restaurant.getChefs()) {
             if (chef.getState() instanceof ChefIdle && chef.getCurrentCustomer() == null) {
-                System.out.println("Found idle chef: " + chef.getInitial());
+                Debugger.restaurantMediatorDebug("Found idle chef: " + chef.getInitial());
                 customerChefAssignments.put(customer, chef);
                 waiter.setAssignedChef(chef);  
                 chef.handleOrder(customer, waiter);

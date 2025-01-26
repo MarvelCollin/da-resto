@@ -1,6 +1,7 @@
 package models.Entity;
 
 import interfaces.IState;
+import utils.Debugger;
 import interfaces.IRestaurant;
 import controllers.Mediators.RestaurantMediator;
 
@@ -68,8 +69,7 @@ public abstract class Entity implements IRestaurant {
     public void update() {
         if (!isPaused && state != null) {
             state.update();
-            // Debug state changes
-            System.out.println(getInitial() + " state: " + state.getStateName());
+            Debugger.generalDebug(getInitial() + " state: " + state.getStateName());
         }
     }
 }

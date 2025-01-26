@@ -1,6 +1,7 @@
 package controllers.Facades;
 
 import controllers.Mediators.RestaurantMediator;
+import controllers.Observers.CustomerGenerator;
 import models.Restaurant;
 import models.Entity.*;
 import models.Factory.ChefFactory;
@@ -55,26 +56,31 @@ public class GameFacade {
     private void initializeGame() {
         
         for (int i = 0; i < Constants.DEFAULT_WAITERS; i++) {
-            Waiter waiter = WaiterFactory.getInstance().createWaiter();
-            Chef chef = ChefFactory.getInstance().createChef();
-            
-            waiter.setMediator(mediator);
-            chef.setMediator(mediator);
-            
-            restaurant.addWaiter(waiter);
-            restaurant.addChef(chef);
+            hireWaiter();
+            hireChef();
         }
     }
     
     public void hireWaiter() {
-        Waiter waiter = WaiterFactory.getInstance().createWaiter();
-        waiter.setMediator(mediator);
-        restaurant.addWaiter(waiter);
+        if (restaurant != null) {
+            Waiter waiter = WaiterFactory.getInstance().createWaiter();
+            waiter.setMediator(mediator);
+            restaurant.addWaiter(waiter);
+        }
     }
     
     public void hireChef() {
-        Chef chef = ChefFactory.getInstance().createChef();
-        chef.setMediator(mediator);
-        restaurant.addChef(chef);
+        if (restaurant != null) {
+            Chef chef = ChefFactory.getInstance().createChef();
+            chef.setMediator(mediator);
+            restaurant.addChef(chef);
+        }
+    }
+    
+    public void shutdown() {
+        if (mediator != null) {
+            mediator.shutdown();
+        }
+        CustomerGenerator.getInstance().stop();
     }
 }
