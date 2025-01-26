@@ -2,10 +2,11 @@ package models.Entity;
 
 import interfaces.IState;
 
+
 public abstract class Entity {
     private String initial;
     private String outputString;
-    protected IState state;  // Add state field
+    protected IState state;  
 
     public Entity(String initial) {
         this.initial = initial;

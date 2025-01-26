@@ -1,16 +1,19 @@
 package models;
 
-import java.util.ArrayList;
+import interfaces.IRestaurantState;
 import models.Entity.*;
 import models.Factory.RestaurantFactory;
+import models.States.RestaurantState.RestaurantRunning;
 import utils.StringUtils;
+
+import java.util.ArrayList;
 
 public class Restaurant {
     private static Restaurant activeRestaurant;
     private int money = 1300;
     private int score = 0;
     private int seats = 4;
-    private RestaurantState state;
+    private IRestaurantState state;
     
     public static Restaurant createRestaurant(String name) {
         activeRestaurant = RestaurantFactory.getInstance().createRestaurant(name);
@@ -31,6 +34,8 @@ public class Restaurant {
         this.chefs = new ArrayList<>();
         this.waiters = new ArrayList<>();
         this.customers = new ArrayList<>();
+        this.state = new RestaurantRunning();
+        this.state.onEnter(this);
     }
 
     public String getName() { return name; }
@@ -70,7 +75,17 @@ public class Restaurant {
     public int getSeats() { return seats; }
     public void setSeats(int seats) { this.seats = seats; }
     
-    public void setState(RestaurantState state) {
-        this.state = state;
+    public void setState(IRestaurantState newState) {
+        if (this.state != null) {
+            this.state.onExit(this);
+        }
+        this.state = newState;
+        this.state.onEnter(this);
+    }
+    
+    public void update() {
+        if (state != null) {
+            state.update(this);
+        }
     }
 }

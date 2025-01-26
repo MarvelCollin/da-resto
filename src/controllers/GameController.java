@@ -5,13 +5,12 @@ import utils.Validator;
 import views.GameView;
 
 public class GameController {
-    private GameFacade gameFacade;
-    private GameView gameView;
+    private final GameFacade gameFacade;
+    private final GameView gameView;
     
     public GameController() {
-        this.gameFacade = GameFacade.getInstance();
-        this.gameView = new GameView();
-        start();
+        gameFacade = GameFacade.getInstance();
+        gameView = new GameView();
     }
 
     public void start() {

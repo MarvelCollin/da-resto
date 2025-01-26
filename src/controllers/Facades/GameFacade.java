@@ -2,11 +2,14 @@ package controllers.Facades;
 
 import controllers.Mediators.RestaurantMediator;
 import models.Restaurant;
+import models.Entity.Chef;
+import models.Entity.Waiter;
+import models.Factory.ChefFactory;
 import models.Factory.RestaurantFactory;
-import utils.Constants;
+import models.Factory.WaiterFactory;
 
 public class GameFacade {
-    private static GameFacade instance;
+    private static volatile GameFacade instance;
     private Restaurant restaurant;
     private RestaurantMediator mediator;
     
@@ -16,7 +19,11 @@ public class GameFacade {
     
     public static GameFacade getInstance() {
         if (instance == null) {
-            instance = new GameFacade();
+            synchronized (GameFacade.class) {
+                if (instance == null) {
+                    instance = new GameFacade();
+                }
+            }
         }
         return instance;
     }
@@ -36,6 +43,16 @@ public class GameFacade {
     
     public Restaurant getRestaurant() {
         return restaurant;
+    }
+    
+    public void hireWaiter() {
+        Waiter waiter = WaiterFactory.getInstance().createWaiter();
+        restaurant.addWaiter(waiter);
+    }
+    
+    public void hireChef() {
+        Chef chef = ChefFactory.getInstance().createChef();
+        restaurant.addChef(chef);
     }
     
 }
