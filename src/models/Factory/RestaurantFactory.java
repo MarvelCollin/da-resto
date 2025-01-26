@@ -32,8 +32,8 @@ public class RestaurantFactory {
         }
     }
     
-    public Restaurant createRestaurant() {
-        Restaurant restaurant = new Restaurant();
+    public Restaurant createRestaurant(String name) {
+        Restaurant restaurant = new Restaurant(name);
         
         createMultipleEntities(
             Constants.DEFAULT_CHEFS,
