@@ -3,9 +3,14 @@ package controllers;
 import utils.Validator;
 import utils.Switch;
 import views.MainMenuView;
+import views.HighscoreView;
+import controllers.managers.HighscoreManager;
+
+import java.util.ArrayList;
 
 public class MainController {
     public final MainMenuView mainMenuView = new MainMenuView();
+    private final HighscoreView highscoreView = new HighscoreView();
     
     public MainController() {
         start();
@@ -22,15 +27,20 @@ public class MainController {
             );
             
             Switch.execute(choice, 
-				() -> new GameController().start(),
-				() -> new HighscoreController().start(),
+                () -> new GameController().start(),
+                () -> showHighscores(),
                 () -> exitMenu()
             );
         }
     }
-	
-	public void exitMenu() {
-		System.out.println("Thank you for playing!");
-		System.exit(0);
-	}
+    
+    private void showHighscores() {
+        ArrayList<Integer> scores = HighscoreManager.getInstance().getHighscores();
+        highscoreView.showHighscores(scores);
+    }
+    
+    public void exitMenu() {
+        System.out.println("Thank you for playing!");
+        System.exit(0);
+    }
 }
